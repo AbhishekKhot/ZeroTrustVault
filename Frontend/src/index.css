@@ -1,0 +1,433 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   ZeroTrust — global stylesheet.
+   Targets the className surface used by App.tsx, the auth pages, the vault
+   page, the modal components, the toast system, and the password generator.
+   ────────────────────────────────────────────────────────────────────────── */
+
+:root {
+    color-scheme: dark;
+
+    --bg: #0b0d12;
+    --bg-elev: #14181f;
+    --bg-elev-2: #1b212b;
+    --border: #2a313d;
+    --border-strong: #3a4252;
+
+    --text: #e6e8ec;
+    --text-muted: #9aa3b2;
+    --text-dim: #6b7280;
+
+    --accent: #7c5cff;
+    --accent-hover: #9079ff;
+    --accent-fade: rgba(124, 92, 255, 0.16);
+
+    --danger: #ef4444;
+    --danger-hover: #f87171;
+    --danger-fade: rgba(239, 68, 68, 0.12);
+
+    --success: #22c55e;
+    --info: #38bdf8;
+    --warning: #f59e0b;
+
+    --radius: 10px;
+    --radius-lg: 14px;
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.25);
+
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text);
+    background:
+        radial-gradient(1100px 600px at 12% -10%, rgba(124, 92, 255, 0.12), transparent 60%),
+        radial-gradient(900px 500px at 100% 0%, rgba(56, 189, 248, 0.08), transparent 60%),
+        var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 {
+    margin: 0 0 0.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.15rem; }
+
+p { margin: 0; color: var(--text-muted); }
+label { font-size: 0.875rem; color: var(--text-muted); }
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+}
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+/* ── App shell ──────────────────────────────────────────────────────────── */
+
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 3rem 1.25rem;
+}
+
+/* ── Auth card (Login / Register / Unlock / used inside modals too) ─────── */
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.auth-header { display: flex; flex-direction: column; gap: 0.25rem; text-align: left; }
+.auth-header h2,
+.auth-header h3 { color: var(--text); }
+.auth-header p { color: var(--text-muted); font-size: 0.9rem; }
+
+.auth-form { display: flex; flex-direction: column; gap: 1rem; }
+
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.form-group input,
+.secret-input,
+.password-generator input[type="range"] {
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    background: var(--bg-elev-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+.form-group input::placeholder { color: var(--text-dim); }
+.form-group input:hover { border-color: var(--border-strong); }
+.form-group input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-fade);
+    background: var(--bg-elev);
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.auth-button {
+    appearance: none;
+    border: 1px solid transparent;
+    background: var(--accent);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius);
+    transition: background 120ms ease, transform 80ms ease, border-color 120ms ease;
+}
+.auth-button:hover:not(:disabled) { background: var(--accent-hover); }
+.auth-button:active:not(:disabled) { transform: translateY(1px); }
+.auth-button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.auth-button.secondary {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border-strong);
+}
+.auth-button.secondary:hover:not(:disabled) {
+    background: var(--bg-elev-2);
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.auth-footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.error-message {
+    color: var(--danger-hover);
+    background: var(--danger-fade);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+}
+
+/* ── Vault page ─────────────────────────────────────────────────────────── */
+
+.vault-container {
+    width: 100%;
+    max-width: 880px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.vault-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+}
+.vault-header h2 { margin-bottom: 0.15rem; }
+.vault-header p { font-size: 0.9rem; }
+
+.vault-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.vault-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--text-muted);
+    background: var(--bg-elev);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+}
+
+/* ── Vault item card ────────────────────────────────────────────────────── */
+
+.vault-item-card {
+    display: grid;
+    grid-template-columns: minmax(160px, 1fr) minmax(220px, 1.5fr) auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    transition: border-color 120ms ease, transform 120ms ease;
+}
+.vault-item-card:hover { border-color: var(--border-strong); }
+
+.vault-item-info h3 {
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 0.1rem;
+    word-break: break-word;
+}
+.vault-item-info .username {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    word-break: break-all;
+}
+
+.vault-item-secret {
+    display: flex;
+    align-items: stretch;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.secret-input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.55rem 0.75rem;
+    background: var(--bg-elev-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+}
+.secret-input:focus { outline: none; border-color: var(--accent); }
+
+.secret-actions { display: flex; gap: 0.4rem; }
+.secret-actions button {
+    background: var(--bg-elev-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+    transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.secret-actions button:hover:not(:disabled) {
+    background: var(--bg-elev);
+    border-color: var(--accent);
+    color: var(--accent-hover);
+}
+.secret-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.delete-btn {
+    appearance: none;
+    background: transparent;
+    color: var(--danger-hover);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.delete-btn:hover { background: var(--danger-fade); color: var(--danger); border-color: var(--danger); }
+
+/* ── Modal overlay (AddItemModal + ConfirmDialog) ───────────────────────── */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 6, 10, 0.65);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    z-index: 50;
+}
+.modal-overlay .auth-card { max-width: 480px; }
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.modal-actions .auth-button { min-width: 120px; }
+
+/* ── Password generator ─────────────────────────────────────────────────── */
+
+.password-generator {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+    background: var(--bg-elev-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+.generator-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.generator-header label {
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+.generator-header input[type="range"] {
+    flex: 1;
+    accent-color: var(--accent);
+}
+.generator-btn { width: 100%; }
+
+/* ── Toasts ─────────────────────────────────────────────────────────────── */
+
+.toast-stack {
+    position: fixed;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 100;
+    pointer-events: none;
+}
+.toast {
+    pointer-events: auto;
+    min-width: 240px;
+    max-width: 360px;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    font-size: 0.9rem;
+    box-shadow: var(--shadow);
+    animation: toast-in 160ms ease-out;
+}
+.toast-success { border-left: 3px solid var(--success); }
+.toast-error   { border-left: 3px solid var(--danger); }
+.toast-info    { border-left: 3px solid var(--info); }
+.toast-warning { border-left: 3px solid var(--warning); }
+
+.countdown-chip {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: var(--accent-fade);
+    color: var(--accent-hover);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Small-screen tweaks ────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+    .app-container { padding: 1.5rem 0.85rem; }
+    .auth-card { padding: 1.5rem; }
+
+    .vault-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .vault-actions { justify-content: stretch; }
+    .vault-actions .auth-button { flex: 1; }
+
+    .vault-item-card {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+    .delete-btn { justify-self: end; }
+}

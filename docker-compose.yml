@@ -1,0 +1,63 @@
+# ZeroTrust — local stack.
+#
+# `docker compose up` brings up:
+#   - db       : Postgres 16, with a healthcheck so the backend waits
+#                for "ready to accept connections" before it tries to
+#                open a pool.
+#   - backend  : multi-stage build from Backend/Dockerfile. On boot it
+#                runs `AppDataSource.runMigrations()` (see Backend/src/index.ts)
+#                before binding the port — so by the time you can hit
+#                localhost:3000 the schema is up to date.
+#
+# All secrets and connection strings come from .env (gitignored). The
+# `${VAR:?msg}` syntax fails-fast if a required variable isn't set —
+# safer than silently defaulting to a weak value.
+
+services:
+    db:
+        image: postgres:16-alpine
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: "${POSTGRES_USER:-pm}"
+            POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required, set it in .env}"
+            POSTGRES_DB: "${POSTGRES_DB:-password_manager}"
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        healthcheck:
+            test:
+                - CMD-SHELL
+                - pg_isready -U "$${POSTGRES_USER:-pm}" -d "$${POSTGRES_DB:-password_manager}"
+            interval: 5s
+            timeout: 5s
+            retries: 10
+        # No host port mapping by default — the backend reaches the DB over
+        # the compose-internal network. Uncomment the block below if you need
+        # psql / GUI access from the host, but pick a non-default host port
+        # (e.g. "5433:5432") so it doesn't clash with a local Postgres.
+        # ports:
+        #     - "5433:5432"
+
+    backend:
+        build:
+            context: ./Backend
+        restart: unless-stopped
+        depends_on:
+            db:
+                condition: service_healthy
+        environment:
+            # Connection string targets the `db` service hostname inside the
+            # compose network — not localhost.
+            DATABASE_URL: "postgres://${POSTGRES_USER:-pm}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-password_manager}"
+            JWT_SECRET: "${JWT_SECRET:?JWT_SECRET is required, >=32 chars (generate with openssl rand -base64 48)}"
+            NODE_ENV: "${NODE_ENV:-production}"
+            PORT: "3000"
+            FRONTEND_ORIGIN: "${FRONTEND_ORIGIN:-http://localhost:5173}"
+            LOG_LEVEL: "${LOG_LEVEL:-info}"
+            PBKDF2_ITERATIONS: "${PBKDF2_ITERATIONS:-600000}"
+            DB_POOL_MAX: "${DB_POOL_MAX:-20}"
+            REQUEST_TIMEOUT_MS: "${REQUEST_TIMEOUT_MS:-10000}"
+        ports:
+            - "3000:3000"
+
+volumes:
+    pgdata:
